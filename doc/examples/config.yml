@@ -1,0 +1,9 @@
+log:
+    levelStdout: "info"
+    pathFile: "dbp.log"
+    levelFile: "info"
+build:
+    extensionExclude: ".md,.txt"
+template:
+    imagePath: "my-custom-image.tmpl"
+    indexPath: "my-custom-index.tmpl"
