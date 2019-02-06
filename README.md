@@ -1,10 +1,15 @@
-# DBP (DOCKER BUILD PARENT)
-DBP build multiple images with dependencies with other images. A multi-build is detect by change of a commit.
+# DBP (Docker Build Parent)
+
+DBP build multiple images with dependencies with other images.
+
+A multi-build is detect by change of a commit.
+
 DBP generate also a document with data specified in each directory.
 
 ## Usage
+
 ```help
-dbp
+dbp --help
 usage: dbp [<flags>] <command> [<args> ...]
 
 A command-line dbp helper.
@@ -42,26 +47,63 @@ Commands:
   version
     Display version
 ```
+
 ## Requirements
 
-* Docker
-* GIT
+* Docker (18.06+)
+* Git (2.17+)
 
-## Setup
+## Development
 
-### Install go-bindata
+* Install go-bindata:
 
-```
-go get -u github.com/go-bindata/go-bindata
-```
+  ```bash
+  go get -u github.com/go-bindata/go-bindata/...
+  ```
 
-### Generate templates
+* Generate assets:
 
-```
-go generate
-```
+  ```bash
+  go generate
+  ```
+
+* Build the project:
+
+  ```bash
+  go build .
+  ```
+
+* Run tests:
+
+  ```bash
+  go test ./...
+  ```
+
+## Production
+
+* Run dbp with docker:
+
+  ```bash
+  docker run -it -v /var/run/docker.sock:/var/run/docker.sock -v ${PWD}:/build insanebrain/dbp:${VERSION} dbp --help
+  ```
+
+* Install dbp with deb (may require sudo privileges):
+
+  ```bash
+  curl -L "https://github.com/insanebrain/dbp/releases/download/${VERSION}/dbp_$(uname -m).deb" -o dbp_$(uname -m).deb
+  dpkg -i dbp_$(uname -m).deb
+  rm dbp_$(uname -m).deb
+  ```
+
+* Install binary to custom location:
+
+  ```bash
+  curl -L "https://github.com/insanebrain/dbp/releases/download/${VERSION}/dbp_$(uname -s)_$(uname -m)" -o ${DESTINATION}/dbp
+  chmod +x ${DESTINATION}/dbp
+  ```
 
 ## Config file dbp.yml
+
 See documentation example for image configuration [here](doc/examples/dbp.yml).
 
 See documentation example for dbp configuration [here](doc/examples/config.yml).
@@ -82,17 +124,10 @@ Add in your ~/.zshrc :
 eval "$(dbp --completion-script-zsh)"
 ```
 
-## Docker
-
-docker run -it -v /var/run/docker.sock:/var/run/docker.sock -v ${PWD}:/build insanebrain/dbp:master dbp build --push
-
-## Compatibility
-TODO
-
 ## Contributing
 
 Refer to [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## License
 
-Apache License 2.0, see [LICENSE](LICENSE.md).
+MIT License, see [LICENSE](LICENSE.md).

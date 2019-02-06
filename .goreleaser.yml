@@ -1,28 +1,73 @@
-project_name: dbp
+project_name: "dbp"
+
+before:
+  hooks:
+    - dep ensure
+    - go generate
+
 builds:
   -
+    main: ./main.go
     goos:
-      - linux
       - darwin
       - windows
+      - linux
     goarch:
       - 386
       - amd64
-      - arm
-      - arm64
-    ldflags: -s -w -X main.version=__VERSION__
+    env:
+      - CGO_ENABLED=0
 
 checksum:
   name_template: '{{ .ProjectName }}_checksums.txt'
 
 archive:
-  name_template: '{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
+  name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
+  format: binary
   replacements:
+    amd64: x86_64
+    386: i686
     darwin: Darwin
     linux: Linux
     windows: Windows
-    386: i386
+
+nfpm:
+  name_template: "{{ .ProjectName }}_{{ .Arch }}"
+  replacements:
     amd64: x86_64
-  format_overrides:
-    - goos: windows
-      format: zip
+    386: i686
+  vendor: InsaneBrain
+  homepage: https://github.com/insanebrain/dbp
+  maintainer: Alexandre Haag <alexandre.haag90@gmail.com>
+  description: DBP build multiple images with dependencies with other images. A multi-build is detect by change of a commit. DBP generate also a document with data specified in each directory.
+  license: MIT License
+  formats:
+    - deb
+  recommends:
+    - git
+    - docker
+
+release:
+  prerelease: auto
+
+changelog:
+  sort: asc
+
+dockers:
+  -
+    goos: linux
+    goarch: amd64
+    binaries:
+      - dbp
+    image_templates:
+      - "insanebrain/dbp:{{ .Tag }}"
+      - "insanebrain/dbp:v{{ .Major }}"
+      - "insanebrain/dbp:v{{ .Major }}.{{ .Minor }}"
+    dockerfile: Dockerfile
+    build_flag_templates:
+      - "--label=org.label-schema.schema-version=1.0"
+      - "--label=org.label-schema.version={{.Version}}"
+      - "--label=org.label-schema.name={{.ProjectName}}"
+      - "--label=org.label-schema.commit={{.Commit}}"
+    extra_files:
+      - entrypoint.sh

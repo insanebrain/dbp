@@ -189,7 +189,6 @@
   version = "v1.0.1"
 
 [[projects]]
-  branch = "master"
   digest = "1:095e6cc12b2b7063e6f30d6f8d3b2440f9a0c9a4e552b3d2facf601e73ff439f"
   name = "github.com/logrusorgru/aurora"
   packages = ["."]
@@ -296,7 +295,6 @@
   version = "v0.2.0"
 
 [[projects]]
-  branch = "master"
   digest = "1:563569524c7d4c4be853b9a719c9a804fb19492f738b94cbf808ce72816701d1"
   name = "github.com/xlab/treeprint"
   packages = ["."]
@@ -458,6 +456,7 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/docker/distribution/reference",
     "github.com/docker/docker/api/types",
     "github.com/docker/docker/client",
     "github.com/docker/docker/pkg/archive",
