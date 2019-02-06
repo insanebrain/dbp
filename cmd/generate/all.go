@@ -29,7 +29,7 @@ func (d *AllConfig) run(c *kingpin.ParseContext) error {
         logrus.Debugf("end generating readme %s", image.GetFullName())
 
         if err != nil {
-            logrus.Errorf("something went wrong when generate readme of image : %s", err)
+            logrus.Fatalf("something went wrong when generate readme of image : %s", err)
         }
     }
 

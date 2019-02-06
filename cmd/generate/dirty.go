@@ -14,7 +14,7 @@ func (d *DirtyConfig) run(c *kingpin.ParseContext) error {
     filesUpdated, err := utils.GetStatus(config.Get().CurrentPath)
 
     if err != nil {
-        logrus.Error(err)
+        logrus.Fatal(err)
     }
 
     imageChangedPaths := utils.ExcludeExtFileAndMergePath(filesUpdated)

@@ -99,7 +99,7 @@ func Build(imageData *model.ImageData) error {
         SuppressOutput: false,
         Remove:         true,
         ForceRemove:    true,
-        PullParent:     true,
+        PullParent:     false,
         Tags:           tags,
         BuildArgs:      args,
         AuthConfigs:    authConfig.GetAuthConfigs(),
