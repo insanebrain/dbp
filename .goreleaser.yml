@@ -51,7 +51,7 @@ release:
   prerelease: auto
 
 changelog:
-  sort: empty
+  sort:
 
 dockers:
   -
