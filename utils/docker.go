@@ -4,6 +4,8 @@ import (
     "context"
     "encoding/base64"
     "encoding/json"
+    "errors"
+    "fmt"
     "github.com/docker/distribution/reference"
     "github.com/docker/docker/api/types"
     "github.com/docker/docker/client"
@@ -117,6 +119,10 @@ func Push(tag string) error {
     authConfig, _ := GetAuthConfig()
     authConfigs := authConfig.GetAuthConfigs()
     ref, err := reference.ParseNormalizedNamed(tag)
+
+    if _, ok := authConfigs[reference.Domain(ref)]; !ok {
+        return errors.New(fmt.Sprintf("unable to find docker credential of %s.\n did you forget to docker login ?", reference.Domain(ref)))
+    }
 
     buf, err := json.Marshal(authConfigs[reference.Domain(ref)])
     if err != nil {
