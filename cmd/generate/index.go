@@ -40,7 +40,7 @@ func (i *IndexConfig) run(c *kingpin.ParseContext) error {
     err = utils.GenerateReadmeIndex(allImages, templateFile)
 
     if err != nil {
-        logrus.Errorf("something went wrong when generate readme index : %s", err)
+        logrus.Fatalf("something went wrong when generate readme index : %s", err)
     }
 
     return nil

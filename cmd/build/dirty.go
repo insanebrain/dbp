@@ -29,16 +29,17 @@ func (d *DirtyConfig) run(c *kingpin.ParseContext) error {
     err = utils.BuildImages(imageToBuild)
 
     if err != nil {
-        logrus.Errorf("something went wrong when building : %s", err)
+        logrus.Fatalf("something went wrong when building : %s", err)
     }
 
     if d.BuildConfig.PushNeeded {
         err = utils.PushImages(imageToBuild)
+
+        if err != nil {
+            logrus.Fatalf("something went wrong when pushing : %s", err)
+        }
     }
 
-    if err != nil {
-        logrus.Errorf("something went wrong when pushing : %s", err)
-    }
 
     return nil
 }
