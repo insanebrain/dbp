@@ -6,6 +6,8 @@ A multi-build is detect by change of a commit.
 
 DBP generate also a document with data specified in each directory.
 
+[![Build Status](https://travis-ci.com/insanebrain/dbp.svg?branch=master)](https://travis-ci.com/insanebrain/dbp)
+
 ## Usage
 
 ```help
