@@ -11,8 +11,6 @@ type testArgs struct {
     destImage    model.ImageData
 }
 
-const currentPath = "/repo/images"
-
 func getTestArgs(destName string, currentRelativeDir string, destRelativeDir string) testArgs {
     return testArgs{
         model.ImageData{
@@ -111,4 +109,35 @@ func Test_Utils_Path_getDirDepth_ShouldReturnAValidDepth(t *testing.T) {
     for _, test := range tests {
         assert.Equal(t, test.expected, getDirDepth(test.param))
     }
+}
+
+func Test_Utils_Path_GetImageType_ShouldReturnAValidType(t *testing.T) {
+
+    var tests = []struct {
+        param    string
+        expected ImageType
+    }{
+        {"image", OFFICIAL},
+        {"user/image", UNOFFICIAL},
+        {"example.fr/image", REGISTRY},
+        {"example.fr/namespace/image", REGISTRY},
+        {"example.fr/namespace/subnamespace/image", REGISTRY},
+        {"127.0.0.1:5000/docker/docker", REGISTRY},
+        {"example.fr:5000/docker/docker", REGISTRY},
+    }
+
+    for _, test := range tests {
+        imageData := model.ImageData{
+            Name: test.param,
+        }
+        assert.Equal(t, test.expected, GetImageType(imageData), "param ["+test.param+"]")
+    }
+
+}
+
+func Test_Utils_Path_GetImageType_ShouldReturnUndefined(t *testing.T) {
+    imageData := model.ImageData{
+        Name: "",
+    }
+    assert.Equal(t, UNDEFINED, GetImageType(imageData))
 }

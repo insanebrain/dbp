@@ -2,6 +2,7 @@ package utils
 
 import (
     "errors"
+    "github.com/docker/distribution/reference"
     "github.com/insanebrain/dbp/model"
     "path"
     "strings"
@@ -9,13 +10,24 @@ import (
 
 const DockerHubUrl = "https://hub.docker.com/"
 
-func GetUrl(currentImage model.ImageData, destImage model.ImageData, ) (string, error) {
-    switch destImage.GetImageType() {
-    case model.OFFICIAL:
+type ImageType int
+
+const (
+    UNDEFINED ImageType = iota
+    OFFICIAL
+    UNOFFICIAL
+    REGISTRY
+)
+
+const DockerDomain = "docker.io"
+
+func GetUrl(currentImage model.ImageData, destImage model.ImageData) (string, error) {
+    switch GetImageType(destImage) {
+    case OFFICIAL:
         return DockerHubUrl + "_/" + destImage.Name, nil
-    case model.UNOFFICIAL:
+    case UNOFFICIAL:
         return DockerHubUrl + "r/" + destImage.Name, nil
-    case model.REGISTRY:
+    case REGISTRY:
         if destImage.RelativeDir == "" {
             return "", nil
         }
@@ -34,4 +46,18 @@ func getDirDepth(dir string) int {
     }
     joined := path.Join(trimmed)
     return len(strings.Split(joined, "/"))
+}
+
+func GetImageType(imageData model.ImageData) ImageType {
+    ref, err := reference.ParseNormalizedNamed(imageData.Name)
+    if err != nil {
+        return UNDEFINED
+    }
+    if reference.Domain(ref) != DockerDomain {
+        return REGISTRY
+    } else if reference.Path(ref) == "library/" + imageData.Name {
+        return OFFICIAL
+    } else {
+        return UNOFFICIAL
+    }
 }

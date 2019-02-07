@@ -21,6 +21,7 @@ import (
 )
 
 const defaultDockerAPIVersion = "v1.39"
+const DockerAuthUrl = "https://index.docker.io/v1/"
 
 type AuthConfig struct {
     AuthConfigs map[string]types.AuthConfig `json:"auths,omitempty"`
@@ -119,12 +120,17 @@ func Push(tag string) error {
     authConfig, _ := GetAuthConfig()
     authConfigs := authConfig.GetAuthConfigs()
     ref, err := reference.ParseNormalizedNamed(tag)
+    authKey := reference.Domain(ref)
 
-    if _, ok := authConfigs[reference.Domain(ref)]; !ok {
+    if reference.Domain(ref) == DockerDomain {
+        authKey = DockerAuthUrl
+    }
+
+    if _, ok := authConfigs[authKey]; !ok {
         return errors.New(fmt.Sprintf("unable to find docker credential of %s.\n did you forget to docker login ?", reference.Domain(ref)))
     }
 
-    buf, err := json.Marshal(authConfigs[reference.Domain(ref)])
+    buf, err := json.Marshal(authConfigs[authKey])
     if err != nil {
         return err
     }
