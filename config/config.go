@@ -12,6 +12,8 @@ import (
 )
 
 var defaultPath = "config.yml"
+var version = "master"
+var commit = ""
 
 type Config struct {
     Log struct {
@@ -27,6 +29,8 @@ type Config struct {
         IndexPath string `config:"TEMPLATE_INDEX_PATH" yaml:"indexPath"`
     } `yaml:"template"`
     CurrentPath string
+    Version string
+    Commit string
 }
 
 var instance Config
@@ -57,6 +61,8 @@ func Load(currentPath string, configPath string) {
     instance.Log.LevelStdout = "info"
     instance.Build.ExtensionExclude = ".md,.txt"
     instance.CurrentPath, _ = filepath.Abs(currentPath)
+    instance.Version = version
+    instance.Commit = commit
 
     err := loader.Load(context.Background(), &instance)
     if err != nil {

@@ -12,11 +12,9 @@ import (
 
 var (
     app     = kingpin.New("dbp", "A command-line dbp helper.")
-    version = "master"
 )
 
 func main() {
-    kingpin.Version(version)
 
     // Config flag to override config file path
     var configFile string
@@ -35,11 +33,11 @@ func main() {
     cmd.ConfigureBuildCmd(app)
     cmd.ConfigureListCmd(app)
     cmd.ConfigureGenerateCmd(app)
-    cmd.ConfigureVersionCmd(app, version)
+    cmd.ConfigureVersionCmd(app)
     app.PreAction(func(context *kingpin.ParseContext) error {
         // init config
         config.Load(currentPath, string(configFile))
-        config.Get()
+        kingpin.Version(config.Get().Version)
 
         // init logger
         levelStdoutParsed, err := logrus.ParseLevel(config.Get().Log.LevelStdout)

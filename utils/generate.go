@@ -45,6 +45,7 @@ func GenerateReadmeImage(image *model.ImageData, data []byte) error {
     additionalVars := template.FuncMap{
         "now": time.Now,
         "getUrl": GetUrl,
+        "config": config.Get,
     }
 
     tmpl, err := template.New("image-readme").Funcs(additionalVars).Parse(string(data))
@@ -70,6 +71,7 @@ func GenerateReadmeIndex(imagesToGenerate []*model.ImageData, data []byte) error
     readmePath := config.Get().CurrentPath + string(filepath.Separator) + "README.md"
     additionalVars := template.FuncMap{
         "now": time.Now,
+        "config": config.Get,
     }
 
     tmpl, err := template.New("index-readme").Funcs(additionalVars).Parse(string(data))
