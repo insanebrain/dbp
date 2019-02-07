@@ -86,7 +86,7 @@ func (imageData ImageData) GetFullName() string {
 
 func (imageData ImageData) GetParents() []*ImageData {
     var parents []*ImageData
-    if imageData.HasLocalParent {
+    if imageData.Parent != nil {
         parents = append(parents, imageData.Parent)
         parents = append(parents, imageData.Parent.GetParents()...)
     }

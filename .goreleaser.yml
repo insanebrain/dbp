@@ -17,6 +17,8 @@ builds:
       - amd64
     env:
       - CGO_ENABLED=0
+    ldflags:
+      - -s -w -X github.com/insanebrain/dbp/config.version={{.Tag}} -X github.com/insanebrain/dbp/config.commit={{.Commit}}
 
 checksum:
   name_template: '{{ .ProjectName }}_checksums.txt'

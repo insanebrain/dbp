@@ -44,3 +44,7 @@
 [[constraint]]
   revision = "a7b3b318ed4e1ae5b80602b08627267303c68572"
   name = "github.com/logrusorgru/aurora"
+
+[[constraint]]
+  name = "github.com/stretchr/testify"
+  version = "1.3.0"
