@@ -3,6 +3,7 @@ package model
 import (
     "bufio"
     "fmt"
+    "github.com/docker/distribution/reference"
     "github.com/go-yaml/yaml"
     "github.com/insanebrain/dbp/config"
     "github.com/sirupsen/logrus"
@@ -10,6 +11,15 @@ import (
     "os"
     "path/filepath"
     "strings"
+)
+
+type ImageType int
+
+const (
+    UNDEFINED ImageType = iota
+    OFFICIAL
+    UNOFFICIAL
+    REGISTRY
 )
 
 var DataFilename = "dbp.yml"
@@ -86,7 +96,7 @@ func (imageData ImageData) GetFullName() string {
 
 func (imageData ImageData) GetParents() []*ImageData {
     var parents []*ImageData
-    if imageData.HasLocalParent {
+    if imageData.Parent != nil {
         parents = append(parents, imageData.Parent)
         parents = append(parents, imageData.Parent.GetParents()...)
     }
@@ -133,4 +143,19 @@ func (imageData ImageData) GetTags() []string {
         tags = append(tags, alias.GetFullName())
     }
     return tags
+}
+
+
+func (imageData ImageData) GetImageType() ImageType {
+    ref, err := reference.ParseNormalizedNamed(imageData.Name)
+    if err != nil {
+        return UNDEFINED
+    }
+    if reference.Domain(ref) != "docker.io" {
+        return REGISTRY
+    } else if reference.Path(ref) == "library/" + imageData.Name {
+        return OFFICIAL
+    } else {
+        return UNOFFICIAL
+    }
 }

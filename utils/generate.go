@@ -44,6 +44,7 @@ func GenerateReadmeImage(image *model.ImageData, data []byte) error {
     readmePath := image.Dir + string(filepath.Separator) + "README.md"
     additionalVars := template.FuncMap{
         "now": time.Now,
+        "getUrl": GetUrl,
     }
 
     tmpl, err := template.New("image-readme").Funcs(additionalVars).Parse(string(data))
