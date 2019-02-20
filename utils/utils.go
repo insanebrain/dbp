@@ -63,7 +63,7 @@ func FindDockerFile(searchPath string, root string) (string, error) {
     }
 
     if matched {
-        return searchPath + string(filepath.Separator), nil
+        return searchPath, nil
     } else if searchPath != root {
         return FindDockerFile(path.Dir(searchPath), root)
     }
@@ -91,7 +91,7 @@ func MarkImagesToBuild(imagePathsToBuild []string) []*model.ImageData {
     allImages := GetAllImagesData(config.Get().CurrentPath)
     for _, dir := range imagePathsToBuild {
         for _, image := range allImages {
-            if strings.Contains(dir, image.Dir) {
+            if dir == image.Dir {
                 image.HasToBuild = true
                 break
             }
